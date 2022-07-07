@@ -111,5 +111,32 @@ namespace EntitiyOrnek
                 select item;
             dataGridView1.DataSource = degerler.ToList();
         }
+
+        private void btnLinqEntity_Click(object sender, EventArgs e)
+        {
+            if (radioButton1.Checked == true)
+            {
+                List<TBLOGRENCI> liste1 = db.TBLOGRENCI.OrderBy(p => p.AD).ToList();
+                dataGridView1.DataSource = liste1;
+            }
+
+            if (radioButton2.Checked == true)
+            {
+                List<TBLOGRENCI> liste2 = db.TBLOGRENCI.OrderByDescending(p => p.AD).ToList();
+                dataGridView1.DataSource = liste2;
+            }
+
+            if (radioButton3.Checked == true)
+            {
+                List<TBLOGRENCI> liste3 = db.TBLOGRENCI.OrderBy(p => p.AD).Take(3).ToList();
+                dataGridView1.DataSource = liste3;
+            }
+
+            if (radioButton4.Checked == true)
+            {
+                List<TBLOGRENCI> liste4 = db.TBLOGRENCI.Where(p => p.ID.ToString() == txtOgrenciId.Text).ToList();
+                dataGridView1.DataSource = liste4;
+            }
+        }
     }
 }
