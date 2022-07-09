@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.Design.Serialization;
 using System.Data;
 using System.Data.Entity.ModelConfiguration.Configuration;
 using System.Data.SqlClient;
@@ -137,6 +138,82 @@ namespace EntitiyOrnek
                 List<TBLOGRENCI> liste4 = db.TBLOGRENCI.Where(p => p.ID.ToString() == txtOgrenciId.Text).ToList();
                 dataGridView1.DataSource = liste4;
             }
+
+            if (radioButton5.Checked == true)
+            {
+                List<TBLOGRENCI> liste5 = db.TBLOGRENCI.Where(p => p.AD.StartsWith("a")).ToList();
+                dataGridView1.DataSource = liste5;
+            }
+
+            if (radioButton6.Checked == true)
+            {
+                List<TBLOGRENCI> liste6 = db.TBLOGRENCI.Where(p => p.AD.EndsWith("a")).ToList();
+                dataGridView1.DataSource = liste6;
+            }
+
+            if (radioButton7.Checked == true)
+            {
+                bool deger = db.TBLKULUPLER.Any();
+                MessageBox.Show(deger.ToString(),"Bilgi",MessageBoxButtons.OK,MessageBoxIcon.Information);
+            }
+
+            if (radioButton8.Checked == true)
+            {
+                var count = db.TBLOGRENCI.Count();
+                MessageBox.Show(count.ToString());
+            }
+
+            if (radioButton9.Checked == true)
+            {
+                var sumSinav1 = db.TBLNOTLAR.Sum(p=>p.SINAV1).ToString();
+                MessageBox.Show(sumSinav1);
+            }
+            if (radioButton10.Checked == true)
+            {
+                var avgSinav1 = db.TBLNOTLAR.Average(p => p.SINAV1);
+                MessageBox.Show(avgSinav1.ToString());
+            }
+
+            if (radioButton11.Checked == true)
+            {
+                var avgSinav1 = db.TBLNOTLAR.Average(p => p.SINAV1);
+                dataGridView1.DataSource = db.TBLNOTLAR.Where(p => p.SINAV1 >= avgSinav1).ToList();
+            }
+
+            if (radioButton12.Checked == true)
+            {
+                var enyuksek = db.TBLNOTLAR.Max(p => p.SINAV1);
+                MessageBox.Show(enyuksek.ToString());
+            }
+            if (radioButton13.Checked == true)
+            {
+                var endusuk = db.TBLNOTLAR.Min(p => p.SINAV1);
+                MessageBox.Show(endusuk.ToString());
+            }
+
+            if (radioButton14.Checked == true)
+            {
+
+            }
+        }
+
+        private void btnJoin_Click(object sender, EventArgs e)
+        {
+            var sorgu = from d1 in db.TBLNOTLAR
+                join d2 in db.TBLOGRENCI on d1.OGR equals d2.ID
+                join d3 in  db.TBLDERSLER on d1.DERS equals d3.DERSID 
+                select new
+                {
+                    ÖĞRENCİ = d2.AD + " " + d2.SOYAD,
+                    DERS = d3.DERSAD,
+                    //SOYAD = d2.SOYAD,
+                    SINAV1 = d1.SINAV1,
+                    SINAV2 = d1.SINAV2,
+                    SINAV3 = d1.SINAV3,
+                    ORTALAMA = d1.ORTALAMA
+                };
+            dataGridView1.DataSource = sorgu.ToList();
+
         }
     }
 }
